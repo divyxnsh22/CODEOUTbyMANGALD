@@ -5,6 +5,6 @@
 // all work with zero setup. See README.md for the 5 minute guide.
 // ─────────────────────────────────────────────────────────────
 window.CODEOUT_CONFIG = {
-  APPS_SCRIPT_URL: "",
-  APPS_SCRIPT_SECRET: ""
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxgRl-20YxQXTwuVHvPE1QnTj5GnG33Qkn2BxcHgoWzCjiphSqO-oYpBpeOzxeSiphU/exec",
+  APPS_SCRIPT_SECRET: "Divyansh8572024491"
 };
