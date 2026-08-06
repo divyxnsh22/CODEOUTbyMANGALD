@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CodeOut — get your code out before the session ends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Paste your code, walk away with it. Scan a QR code or email it to yourself — nothing is ever saved on this computer or on any server.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wordmark">EXIT<span class="chevron">▸</span>CodeOut<span class="cursor" aria-hidden="true"></span></div>
+  <p class="tagline">Paste your code. Walk away with it. Nothing stays behind.</p>
+</header>
+
+<main class="layout">
+
+  <!-- EDITOR -->
+  <section class="editor-panel" aria-label="Code editor">
+    <div class="editor-toolbar">
+      <div class="name-row">
+        <input id="filename" type="text" value="my-code" spellcheck="false" autocomplete="off" aria-label="File name">
+        <select id="language" aria-label="Language"></select>
+      </div>
+      <div class="toolbar-actions">
+        <button id="uploadBtn" type="button" class="btn ghost">Open file</button>
+        <input id="fileInput" type="file" hidden>
+        <button id="clearBtn" type="button" class="btn ghost danger">Clear</button>
+      </div>
+    </div>
+
+    <div class="editor-wrap" id="dropzone">
+      <div class="gutter" id="gutter" aria-hidden="true">1</div>
+      <textarea id="code" spellcheck="false" autocomplete="off" autocapitalize="off"
+        placeholder="Paste or type your code here — or drag a file onto this box."></textarea>
+      <div class="drop-hint" id="dropHint">Drop file to load</div>
+    </div>
+
+    <div class="editor-footer">
+      <span id="charCount">0 characters</span>
+      <span id="lineCount">1 line</span>
+    </div>
+  </section>
+
+  <!-- EXPORT / "BOARDING PASS" -->
+  <aside class="pass" aria-label="Send your code home">
+
+    <div class="pass-main">
+      <p class="eyebrow">Boarding pass</p>
+      <h2>Send it home</h2>
+
+      <div class="qr-block">
+        <div class="qr-frame">
+          <canvas id="qrCanvas" width="200" height="200"></canvas>
+          <p id="qrEmpty" class="qr-empty">Start typing to<br>generate a code</p>
+        </div>
+        <p class="qr-label">SCAN WITH YOUR PHONE</p>
+        <div id="qrPager" class="qr-pager hidden">
+          <button id="qrPrev" type="button" class="btn ghost small" aria-label="Previous QR part">‹</button>
+          <span id="qrPartLabel">Part 1 of 1</span>
+          <button id="qrNext" type="button" class="btn ghost small" aria-label="Next QR part">›</button>
+        </div>
+        <p id="qrWarning" class="qr-warning hidden"></p>
+      </div>
+
+      <div class="row-actions">
+        <button id="downloadBtn" type="button" class="btn solid">Download file</button>
+        <button id="copyBtn" type="button" class="btn ghost">Copy text</button>
+      </div>
+    </div>
+
+    <div class="perforation" aria-hidden="true"></div>
+
+    <div class="pass-stub">
+      <p class="eyebrow">Email</p>
+      <label for="toEmail" class="stub-label">Send a copy to</label>
+      <input id="toEmail" type="email" placeholder="you@example.com" autocomplete="email" spellcheck="false">
+      <button id="instantEmailBtn" type="button" class="btn solid full">Send instantly</button>
+      <button id="mailtoBtn" type="button" class="btn ghost full">Open in mail app instead</button>
+      <p id="emailNote" class="fine-print"></p>
+    </div>
+
+  </aside>
+</main>
+
+<section class="how">
+  <h2>How this works</h2>
+  <ol>
+    <li><span class="num">01</span><div><strong>Write or drop in your code.</strong> Everything happens in this browser tab — nothing is uploaded or saved anywhere as you type.</div></li>
+    <li><span class="num">02</span><div><strong>Pick a way out.</strong> Scan the QR code with your phone's camera, email it to yourself, or just download it.</div></li>
+    <li><span class="num">03</span><div><strong>Close the tab.</strong> Nothing was ever stored on this computer, so there's nothing left to clean up.</div></li>
+  </ol>
+</section>
+
+<footer class="foot">
+  <p><strong>Nothing here touches a server this site doesn't need.</strong> Your code never leaves your browser except in the exact moment you choose to email it or scan it — there's no database, no login, and no history saved on this machine.</p>
+  <p class="foot-sub">Built for students on shared lab computers. <a href="https://github.com/" target="_blank" rel="noopener">Fork it on GitHub</a> and host your own copy for free with GitHub Pages.</p>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
