@@ -264,11 +264,10 @@
 
   // ---------- email ----------
   var cfg = window.CODEOUT_CONFIG || {};
-  var emailReady = !!(cfg.EMAILJS_PUBLIC_KEY && cfg.EMAILJS_SERVICE_ID && cfg.EMAILJS_TEMPLATE_ID);
+  var emailReady = !!cfg.APPS_SCRIPT_URL;
 
-  if (emailReady && window.emailjs) {
-    emailjs.init(cfg.EMAILJS_PUBLIC_KEY);
-    emailNote.textContent = "Sends straight from your browser through EmailJS — nothing is stored on this computer.";
+  if (emailReady) {
+    emailNote.textContent = "Sends through a free Google Apps Script endpoint straight to that address — nothing is stored on this computer.";
   } else {
     instantEmailBtn.disabled = true;
     emailNote.textContent = "Instant sending isn't set up on this copy of the site yet — use \"Open in mail app\" below, or scan the QR code instead.";
@@ -281,20 +280,31 @@
     if (!validEmail(toEmailEl.value)) { toast("Enter a valid email address"); return; }
     instantEmailBtn.disabled = true;
     instantEmailBtn.textContent = "Sending…";
-    emailjs.send(cfg.EMAILJS_SERVICE_ID, cfg.EMAILJS_TEMPLATE_ID, {
-      to_email: toEmailEl.value,
+
+    var body = new URLSearchParams({
+      to: toEmailEl.value,
       subject: currentFilename(),
-      message: codeEl.value
-    }).then(function () {
-      toast("Sent to " + toEmailEl.value);
-      instantEmailBtn.disabled = false;
-      instantEmailBtn.textContent = "Send instantly";
-    }, function (err) {
-      console.error(err);
-      toast("Couldn't send — try the mail app option instead");
-      instantEmailBtn.disabled = false;
-      instantEmailBtn.textContent = "Send instantly";
+      message: codeEl.value,
+      token: cfg.APPS_SCRIPT_SECRET || ""
     });
+
+    fetch(cfg.APPS_SCRIPT_URL, { method: "POST", body: body })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.ok) {
+          toast("Sent to " + toEmailEl.value);
+        } else {
+          toast(data.error || "Couldn't send — try the mail app option instead");
+        }
+      })
+      .catch(function (err) {
+        console.error(err);
+        toast("Couldn't send — try the mail app option instead");
+      })
+      .finally(function () {
+        instantEmailBtn.disabled = false;
+        instantEmailBtn.textContent = "Send instantly";
+      });
   });
 
   mailtoBtn.addEventListener("click", function () {
